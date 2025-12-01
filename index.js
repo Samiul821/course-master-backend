@@ -1,9 +1,17 @@
+require("dotenv").config();
 const express = require("express");
-const app = express();
 const mongoose = require("mongoose");
+const cors = require("cors");
+const userRoutes = require("./routes/userRoutes");
 
-const mongoDB = "mongodb://127.0.0.1:27017/coursemaster";
+const app = express();
+app.use(cors());
+app.use(express.json());
 
+const PORT = process.env.PORT || 5000;
+const mongoDB = process.env.MONGO_URI;
+
+// MongoDB connection
 async function connectDB() {
   try {
     await mongoose.connect(mongoDB);
@@ -12,17 +20,13 @@ async function connectDB() {
     console.log("Unable to connect to the server:", error);
   }
 }
-
 connectDB();
-
-// Middleware
-app.use(express.json());
 
 // Test route
 app.get("/", (req, res) => {
   res.send("MongoDB & Server are working!");
 });
 
-app.listen(5000, () => {
-  console.log("Server is running on port: 5000");
+app.listen(PORT, () => {
+  console.log(`Server is running on port: ${PORT}`);
 });
