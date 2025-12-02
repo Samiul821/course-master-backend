@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema(
     dob: { type: Date, required: true },
     gender: { type: String, enum: ["Male", "Female", "Other"], required: true },
     profileImage: { type: String, required: true },
-    role: { type: String },
+    role: { type: String, default: "student" },
   },
   { timestamps: true }
 );

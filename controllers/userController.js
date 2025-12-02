@@ -50,16 +50,19 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
-// Get full user data by email
+// Get user role by email
 exports.getUserRole = async (req, res) => {
   try {
     const { email } = req.params;
 
-    // Find user by email, exclude password
-    const user = await User.findOne({ email }).select("-password");
+    const user = await User.findOne({ email }).select("role");
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    res.status(200).json({ user });
+    res.status(200).json({
+      user: {
+        role: user.role,
+      },
+    });
   } catch (error) {
     console.error("Get User Data Error:", error);
     res.status(500).json({ message: "Server Error" });
