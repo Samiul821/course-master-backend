@@ -8,7 +8,8 @@ const userSchema = new mongoose.Schema(
     phone: { type: String, required: true },
     dob: { type: Date, required: true },
     gender: { type: String, enum: ["Male", "Female", "Other"], required: true },
-    profileImage: { type: String },
+    profileImage: { type: String, required: true },
+    role: { type: String },
   },
   { timestamps: true }
 );
