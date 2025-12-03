@@ -3,7 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const userRoutes = require("./routes/userRoutes");
-const getUserRole = require("./routes/userRoutes")
+const courseRoutes = require("./routes/courseRoutes");
 
 const app = express();
 app.use(cors());
@@ -31,6 +31,8 @@ app.get("/", (req, res) => {
 // Routes
 app.use("/users", userRoutes);
 
+// course
+app.use("/courses", courseRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port: ${PORT}`);
