@@ -36,6 +36,9 @@ const courseSchema = new mongoose.Schema(
     courseThumbnail: { type: String }, // URL
     prerequisites: { type: String }, // Optional
     syllabus: { type: String }, // Optional
+
+    distributor_name: { type: String, required: true },
+    distributor_email: { type: String, required: true },
   },
   { timestamps: true }
 );
