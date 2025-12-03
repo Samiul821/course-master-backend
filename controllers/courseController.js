@@ -48,12 +48,34 @@ exports.createCourse = async (req, res) => {
 };
 
 // =========================
-// GET ALL COURSES
+// GET ALL COURSES (PAGINATION)
 // =========================
 exports.getCourses = async (req, res) => {
   try {
-    const courses = await Course.find().sort({ createdAt: -1 });
-    return res.status(200).json({ success: true, courses });
+    let { page = 1, limit = 10 } = req.query;
+
+    page = parseInt(page);
+    limit = parseInt(limit);
+
+    const skip = (page - 1) * limit;
+
+    // Total count
+    const total = await Course.countDocuments();
+
+    // Paginated data
+    const courses = await Course.find()
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    return res.status(200).json({
+      success: true,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+      courses,
+    });
   } catch (error) {
     console.error("[getCourses] Error:", error);
     return res.status(500).json({ success: false, message: "Server error" });
