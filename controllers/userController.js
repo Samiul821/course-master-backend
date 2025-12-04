@@ -87,3 +87,32 @@ exports.getUserProfile = async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
+
+exports.updateUserByEmail = async (req, res) => {
+  try {
+    const { email } = req.params;
+    const { fullName, phone, dob, gender, profileImage } = req.body;
+
+    console.log("Update request body:", req.body);
+
+    const updatedUser = await User.findOneAndUpdate(
+      { email },
+      {
+        ...(fullName && { fullname: fullName }),
+        ...(phone && { phone }),
+        ...(dob && { dob: new Date(dob) }),
+        ...(gender && { gender }),
+        ...(profileImage !== undefined && { profileImage }),
+      },
+      { new: true } // return the updated document
+    );
+
+    if (!updatedUser)
+      return res.status(404).json({ message: "User not found" });
+
+    res.json({ success: true, user: updatedUser });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};

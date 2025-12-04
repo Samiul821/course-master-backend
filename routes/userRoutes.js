@@ -6,11 +6,22 @@ const {
   getAllUsers,
   getUserRole,
   getUserProfile,
+  updateUserByEmail,
 } = require("../controllers/userController");
 
-router.post("/", registerUser); // Register
-router.get("/", getAllUsers); // Get all users
-router.get('/:email/role', getUserRole)
-router.get("/profile", getUserProfile)
+// Route for registering a new user
+router.post("/", registerUser);
+
+// // Route to get all users
+router.get("/", getAllUsers);
+
+// Static routes should come before dynamic routes
+router.get("/profile", getUserProfile);
+
+// Dynamic route for getting a user's role
+router.get("/:email/role", getUserRole);
+
+// Route for updating a user by email
+router.patch("/update/:email", updateUserByEmail);
 
 module.exports = router;
