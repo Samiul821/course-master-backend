@@ -7,25 +7,23 @@ const {
   getUserProfile,
   updateUserByEmail,
 } = require("../controllers/userController");
-const { loginUser } = require("../controllers/authController");
-const verifyToken = require("../middleware/verifyToken");
 
 // Register new user
 router.post("/", registerUser);
 
 // Login user
-router.post("/login", loginUser);
+// router.post("/login", loginUser);
 
 // Get all users (protected)
-router.get("/", verifyToken, getAllUsers);
+router.get("/", getAllUsers);
 
 // Get logged in user profile (protected)
-router.get("/profile", verifyToken, getUserProfile);
+router.get("/profile", getUserProfile);
 
 // Get user role by email (protected)
-router.get("/:email/role", verifyToken, getUserRole);
+router.get("/:email/role", getUserRole);
 
 // Update user by email (protected)
-router.patch("/update/:email", verifyToken, updateUserByEmail);
+router.patch("/update/:email", updateUserByEmail);
 
 module.exports = router;
