@@ -1,4 +1,3 @@
-// routes/userRoutes.js
 const express = require("express");
 const router = express.Router();
 const {
@@ -8,20 +7,25 @@ const {
   getUserProfile,
   updateUserByEmail,
 } = require("../controllers/userController");
+const { loginUser } = require("../controllers/authController");
+const verifyToken = require("../middleware/verifyToken");
 
-// Route for registering a new user
+// Register new user
 router.post("/", registerUser);
 
-// // Route to get all users
-router.get("/", getAllUsers);
+// Login user
+router.post("/login", loginUser);
 
-// Static routes should come before dynamic routes
-router.get("/profile", getUserProfile);
+// Get all users (protected)
+router.get("/", verifyToken, getAllUsers);
 
-// Dynamic route for getting a user's role
-router.get("/:email/role", getUserRole);
+// Get logged in user profile (protected)
+router.get("/profile", verifyToken, getUserProfile);
 
-// Route for updating a user by email
-router.patch("/update/:email", updateUserByEmail);
+// Get user role by email (protected)
+router.get("/:email/role", verifyToken, getUserRole);
+
+// Update user by email (protected)
+router.patch("/update/:email", verifyToken, updateUserByEmail);
 
 module.exports = router;
