@@ -59,10 +59,8 @@ exports.getCourses = async (req, res) => {
 
     const skip = (page - 1) * limit;
 
-    // Total count
     const total = await Course.countDocuments();
 
-    // Paginated data
     const courses = await Course.find()
       .sort({ createdAt: -1 })
       .skip(skip)
@@ -142,6 +140,56 @@ exports.deleteCourse = async (req, res) => {
       .json({ success: true, message: "Course deleted successfully" });
   } catch (error) {
     console.error("[deleteCourse] Error:", error);
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+// =========================
+// GET ALL COURSE NAMES (Lightweight API)
+// =========================
+exports.getAllCourseNames = async (req, res) => {
+  try {
+    const courseNames = await Course.find({}, "courseTitle");
+
+    return res.status(200).json({
+      success: true,
+      total: courseNames.length,
+      courseNames,
+    });
+  } catch (error) {
+    console.error("[getAllCourseNames] Error:", error);
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+// =========================
+// SEARCH COURSES (title + description)
+// =========================
+exports.searchCourses = async (req, res) => {
+  try {
+    const { query } = req.query;
+
+    if (!query) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Search query is required" });
+    }
+
+    const results = await Course.find({
+      $or: [
+        { courseTitle: { $regex: query, $options: "i" } },
+        { shortDescription: { $regex: query, $options: "i" } },
+        { detailedDescription: { $regex: query, $options: "i" } },
+      ],
+    }).sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      total: results.length,
+      results,
+    });
+  } catch (error) {
+    console.error("[searchCourses] Error:", error);
     return res.status(500).json({ success: false, message: "Server error" });
   }
 };
